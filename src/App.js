@@ -1,23 +1,41 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import axios from 'axios';
 import './App.css';
+import { useEffect } from 'react';
 
 function App() {
+  const [data, setData] = useState([]);
+
+  const fetchInfo = () => {
+    return axios
+      .get('https://api.github.com/search/repositories?q=react')
+      .then((res) => setData(res.data));
+  };
+
+  useEffect(() => {
+    fetchInfo();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>URL</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.items?.map((dataObj, index) => (
+            <tr key={index}>
+              <td>{dataObj.full_name}</td>
+              {''}
+
+              <td>{dataObj.html_url}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
